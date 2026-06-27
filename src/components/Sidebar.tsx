@@ -85,14 +85,13 @@ export default function Sidebar() {
   return (
     <aside className="hidden md:flex fixed inset-y-0 left-0 w-64 flex-col bg-white border-r border-stone-200 px-4 py-6">
       <div className="flex items-center gap-3 px-2 mb-8">
-        <div className="w-9 h-9 rounded-xl bg-indigo-600 text-white grid place-items-center font-serif font-bold">
-          H
-        </div>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/logo.svg" alt="SDlevelUp" className="w-10 h-10" />
         <div>
-          <div className="font-serif text-lg font-semibold text-[#2a1d54] leading-tight">
-            Mon Hub
+          <div className="text-lg font-bold text-[#0a0a0a] leading-tight">
+            SDlevelUp
           </div>
-          <div className="text-[11px] text-stone-400">Pilotage d&apos;activité</div>
+          <div className="text-[11px] text-stone-400">Hub de pilotage</div>
         </div>
       </div>
 
@@ -111,7 +110,7 @@ export default function Sidebar() {
                     href={l.href}
                     className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors ${
                       active
-                        ? "bg-indigo-50 text-indigo-700 font-medium"
+                        ? "bg-[#8d47dc]/10 text-[#8d47dc] font-medium"
                         : "text-stone-600 hover:bg-stone-50"
                     }`}
                   >

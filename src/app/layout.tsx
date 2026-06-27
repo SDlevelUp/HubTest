@@ -3,8 +3,8 @@ import "./globals.css";
 import Sidebar from "@/components/Sidebar";
 
 export const metadata: Metadata = {
-  title: "Hub Pro — Pilotage",
-  description: "Hub de pilotage personnel",
+  title: "SDlevelUp — Hub",
+  description: "Hub de pilotage SDlevelUp",
 };
 
 export default function RootLayout({
@@ -14,7 +14,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr" className="h-full antialiased">
-      <body className="min-h-full bg-[#fbf4e9] text-[#2a1d54] font-sans">
+      <body className="min-h-full bg-[#f5efeb] text-[#0a0a0a] font-sans">
         <div className="flex min-h-screen">
           <Sidebar />
           <main className="flex-1 md:ml-64 px-5 md:px-10 py-8">{children}</main>

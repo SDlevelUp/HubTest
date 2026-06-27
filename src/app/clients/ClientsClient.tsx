@@ -42,7 +42,7 @@ export default function ClientsClient() {
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="font-serif text-3xl text-[#2a1d54]">Clients</h1>
+        <h1 className="font-serif text-3xl text-[#8d47dc]">Clients</h1>
         <p className="text-sm text-stone-500 mt-1">Tes fiches clients</p>
       </header>
 
@@ -71,7 +71,7 @@ export default function ClientsClient() {
           value={form.notes}
           onChange={(e) => setForm({ ...form, notes: e.target.value })}
         />
-        <button onClick={add} className="bg-[#2a1d54] text-white rounded-lg px-4 py-2 text-sm font-medium hover:bg-[#3a2a6e] transition-colors">
+        <button onClick={add} className="bg-[#8d47dc] text-white rounded-lg px-4 py-2 text-sm font-medium hover:bg-[#7a35b8] transition-colors">
           Ajouter
         </button>
       </div>
@@ -98,7 +98,7 @@ export default function ClientsClient() {
         <div className="bg-white border border-stone-200/70 rounded-2xl p-5 shadow-sm">
           {selected ? (
             <div className="space-y-2 text-sm">
-              <div className="font-serif text-xl text-[#2a1d54]">{selected.name}</div>
+              <div className="font-serif text-xl text-[#8d47dc]">{selected.name}</div>
               <div>Email : {selected.email ?? "—"}</div>
               <div>Téléphone : {selected.phone ?? "—"}</div>
               <div>Notes : {selected.notes ?? "—"}</div>

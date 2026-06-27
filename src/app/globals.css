@@ -1,17 +1,18 @@
 @import "tailwindcss";
 
 :root {
-  --cream: #fbf4e9;
-  --ink: #2a1d54;
-  --accent: #e8920c;
-  --background: var(--cream);
-  --foreground: var(--ink);
+  --bg: #f5efeb;
+  --title: #8d47dc;
+  --text: #0a0a0a;
+  --accent: #f5a93f;
+  --background: var(--bg);
+  --foreground: var(--text);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-ink: var(--ink);
+  --color-title: var(--title);
   --color-accent: var(--accent);
   --font-serif: Georgia, "Times New Roman", serif;
 }

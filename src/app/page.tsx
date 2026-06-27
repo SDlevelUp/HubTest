@@ -91,7 +91,7 @@ export default function DashboardPage() {
     <div className="space-y-7">
       <header className="flex items-end justify-between flex-wrap gap-3">
         <div>
-          <h1 className="font-serif text-3xl text-[#2a1d54]">Bonjour 👋</h1>
+          <h1 className="font-serif text-3xl text-[#8d47dc]">Bonjour 👋</h1>
           <p className="text-sm text-stone-500 mt-1 capitalize">
             {new Date().toLocaleDateString("fr-FR", {
               weekday: "long",
@@ -140,7 +140,7 @@ export default function DashboardPage() {
                     cy="50"
                     r="42"
                     fill="none"
-                    stroke="#4f46e5"
+                    stroke="#8d47dc"
                     strokeWidth="10"
                     strokeLinecap="round"
                     strokeDasharray={`${(progression / 100) * 264} 264`}
@@ -148,7 +148,7 @@ export default function DashboardPage() {
                 </svg>
                 <div className="absolute inset-0 grid place-items-center">
                   <div className="text-center">
-                    <div className="text-2xl font-semibold text-[#2a1d54]">
+                    <div className="text-2xl font-semibold text-[#8d47dc]">
                       {progression.toFixed(0)}%
                     </div>
                     <div className="text-[10px] text-stone-400">atteint</div>
@@ -162,7 +162,7 @@ export default function DashboardPage() {
           ) : (
             <div className="text-sm text-stone-400 py-8 text-center">
               Aucun objectif défini.{" "}
-              <a href="/finances" className="text-indigo-600 underline">
+              <a href="/finances" className="text-[#8d47dc] underline">
                 En définir un
               </a>
             </div>
@@ -171,7 +171,7 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid lg:grid-cols-3 gap-5">
-        <Card title="Top produits" action={<a href="/finances" className="text-sm text-indigo-600 hover:underline">Analyse</a>}>
+        <Card title="Top produits" action={<a href="/finances" className="text-sm text-[#8d47dc] hover:underline">Analyse</a>}>
           {topProducts.length === 0 ? (
             <div className="text-sm text-stone-400 py-4">Pas encore de données.</div>
           ) : (
@@ -180,7 +180,7 @@ export default function DashboardPage() {
                 <div key={p.name}>
                   <div className="flex justify-between text-sm mb-1">
                     <span className="text-stone-600 truncate pr-2">{p.name}</span>
-                    <span className="font-medium text-[#2a1d54]">{eur(p.total)}</span>
+                    <span className="font-medium text-[#8d47dc]">{eur(p.total)}</span>
                   </div>
                   <div className="h-2 bg-stone-100 rounded-full">
                     <div
@@ -194,7 +194,7 @@ export default function DashboardPage() {
           )}
         </Card>
 
-        <Card title="Tâches du jour" action={<a href="/taches" className="text-sm text-indigo-600 hover:underline">Tout voir</a>}>
+        <Card title="Tâches du jour" action={<a href="/taches" className="text-sm text-[#8d47dc] hover:underline">Tout voir</a>}>
           {tasks.length === 0 ? (
             <div className="text-sm text-stone-400 py-4">Aucune tâche en cours 🎉</div>
           ) : (
@@ -214,7 +214,7 @@ export default function DashboardPage() {
           )}
         </Card>
 
-        <Card title="Alertes paiements" action={<a href="/finances" className="text-sm text-indigo-600 hover:underline">Voir</a>}>
+        <Card title="Alertes paiements" action={<a href="/finances" className="text-sm text-[#8d47dc] hover:underline">Voir</a>}>
           {pending.length === 0 ? (
             <div className="text-sm text-stone-400 py-4">Aucune échéance en attente ✅</div>
           ) : (
@@ -234,7 +234,7 @@ export default function DashboardPage() {
         </Card>
       </div>
 
-      <Card title="Dernières ventes" action={<a href="/finances" className="text-sm text-indigo-600 hover:underline">Tout voir</a>}>
+      <Card title="Dernières ventes" action={<a href="/finances" className="text-sm text-[#8d47dc] hover:underline">Tout voir</a>}>
         {recent.length === 0 ? (
           <div className="text-sm text-stone-400 py-6 text-center">Aucune vente enregistrée pour le moment.</div>
         ) : (
@@ -242,7 +242,7 @@ export default function DashboardPage() {
             {recent.map((s) => (
               <div key={s.id} className="flex items-center justify-between py-3">
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-full bg-indigo-50 text-indigo-700 grid place-items-center text-xs font-semibold">
+                  <div className="w-9 h-9 rounded-full bg-[#8d47dc]/10 text-[#8d47dc] grid place-items-center text-xs font-semibold">
                     {s.payment_plan === "comptant" ? "1x" : s.payment_plan}
                   </div>
                   <div className="text-sm">
@@ -252,7 +252,7 @@ export default function DashboardPage() {
                     <div className="text-xs text-stone-400">net {eur(s.amount_net)}</div>
                   </div>
                 </div>
-                <div className="font-semibold text-[#2a1d54]">{eur(s.amount_gross)}</div>
+                <div className="font-semibold text-[#8d47dc]">{eur(s.amount_gross)}</div>
               </div>
             ))}
           </div>

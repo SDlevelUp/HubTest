@@ -62,7 +62,7 @@ export default function TachesClient() {
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="font-serif text-3xl text-[#2a1d54]">Mes tâches</h1>
+        <h1 className="font-serif text-3xl text-[#8d47dc]">Mes tâches</h1>
         <p className="text-sm text-stone-500 mt-1">To-do et priorités</p>
       </header>
 
@@ -94,7 +94,7 @@ export default function TachesClient() {
           />
           <button
             onClick={add}
-            className="bg-[#2a1d54] text-white rounded-lg px-4 py-2 text-sm font-medium hover:bg-[#3a2a6e] transition-colors"
+            className="bg-[#8d47dc] text-white rounded-lg px-4 py-2 text-sm font-medium hover:bg-[#7a35b8] transition-colors"
           >
             Ajouter
           </button>

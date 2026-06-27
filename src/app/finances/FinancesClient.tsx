@@ -49,7 +49,7 @@ export default function FinancesClient() {
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="font-serif text-3xl text-[#2a1d54]">Pilotage &amp; finances</h1>
+        <h1 className="font-serif text-3xl text-[#8d47dc]">Pilotage &amp; finances</h1>
         <p className="text-sm text-stone-500 mt-1">Ventes, produits, dépenses et objectifs</p>
       </header>
       <div className="inline-flex gap-1 bg-white border border-stone-200/70 rounded-xl p-1 shadow-sm">
@@ -59,8 +59,8 @@ export default function FinancesClient() {
             onClick={() => setTab(t)}
             className={`px-4 py-2 text-sm rounded-lg transition-colors ${
               tab === t
-                ? "bg-[#2a1d54] text-white font-medium"
-                : "text-stone-500 hover:text-[#2a1d54]"
+                ? "bg-[#8d47dc] text-white font-medium"
+                : "text-stone-500 hover:text-[#8d47dc]"
             }`}
           >
             {t}
@@ -100,13 +100,13 @@ function AnalyseTab({ sales }: { sales: SaleRow[] }) {
       <div className="flex justify-end">
         <a
           href="/api/sales/export"
-          className="inline-flex items-center gap-2 bg-white border border-stone-200 rounded-lg px-4 py-2 text-sm text-[#2a1d54] hover:border-[#e8920c] shadow-sm"
+          className="inline-flex items-center gap-2 bg-white border border-stone-200 rounded-lg px-4 py-2 text-sm text-[#8d47dc] hover:border-[#e8920c] shadow-sm"
         >
           ⬇ Exporter les ventes (CSV)
         </a>
       </div>
       <div className="bg-white border border-stone-200/70 rounded-2xl p-5 shadow-sm">
-        <h2 className="font-semibold text-[#2a1d54] mb-4">Répartition du CA par produit</h2>
+        <h2 className="font-semibold text-[#8d47dc] mb-4">Répartition du CA par produit</h2>
         {data.length === 0 ? (
           <div className="text-sm text-stone-400 py-6 text-center">Aucune vente à analyser.</div>
         ) : (
@@ -118,7 +118,7 @@ function AnalyseTab({ sales }: { sales: SaleRow[] }) {
                   <span className="text-stone-600">{d.label}</span>
                   <span className="text-stone-400">
                     {total ? Math.round((d.value / total) * 100) : 0}% ·{" "}
-                    <span className="font-medium text-[#2a1d54]">{eur(d.value)}</span>
+                    <span className="font-medium text-[#8d47dc]">{eur(d.value)}</span>
                   </span>
                 </div>
               ))}
@@ -254,7 +254,7 @@ function VentesTab({
         />
         <button
           onClick={add}
-          className="bg-[#2a1d54] text-white rounded-lg px-4 py-2 text-sm font-medium hover:bg-[#3a2a6e] transition-colors"
+          className="bg-[#8d47dc] text-white rounded-lg px-4 py-2 text-sm font-medium hover:bg-[#7a35b8] transition-colors"
         >
           Ajouter la vente
         </button>
@@ -351,7 +351,7 @@ function ProduitsTab({
         </label>
         <button
           onClick={add}
-          className="bg-[#2a1d54] text-white rounded-lg px-4 py-2 text-sm font-medium hover:bg-[#3a2a6e] transition-colors"
+          className="bg-[#8d47dc] text-white rounded-lg px-4 py-2 text-sm font-medium hover:bg-[#7a35b8] transition-colors"
         >
           Ajouter
         </button>
@@ -441,7 +441,7 @@ function DepensesTab({
         />
         <button
           onClick={add}
-          className="bg-[#2a1d54] text-white rounded-lg px-4 py-2 text-sm font-medium hover:bg-[#3a2a6e] transition-colors col-span-2 md:col-span-1"
+          className="bg-[#8d47dc] text-white rounded-lg px-4 py-2 text-sm font-medium hover:bg-[#7a35b8] transition-colors col-span-2 md:col-span-1"
         >
           Ajouter
         </button>
@@ -491,7 +491,7 @@ function ObjectifTab({ goals, refresh }: { goals: Goal[]; refresh: () => void })
         value={amount}
         onChange={(e) => setAmount(e.target.value)}
       />
-      <button onClick={save} className="bg-[#2a1d54] text-white rounded-lg px-4 py-2 text-sm font-medium hover:bg-[#3a2a6e] transition-colors">
+      <button onClick={save} className="bg-[#8d47dc] text-white rounded-lg px-4 py-2 text-sm font-medium hover:bg-[#7a35b8] transition-colors">
         Enregistrer
       </button>
     </div>

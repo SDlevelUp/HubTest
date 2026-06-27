@@ -16,7 +16,7 @@ export function StatCard({
   trend?: { dir: "up" | "down"; text: string };
 }) {
   const accents: Record<string, string> = {
-    indigo: "bg-indigo-50 text-indigo-700",
+    indigo: "bg-[#8d47dc]/10 text-[#8d47dc]",
     green: "bg-emerald-50 text-emerald-700",
     amber: "bg-amber-50 text-amber-700",
     rose: "bg-rose-50 text-rose-700",
@@ -32,7 +32,7 @@ export function StatCard({
         )}
       </div>
       <div className="flex items-end gap-2 mt-3">
-        <div className="text-3xl font-semibold text-[#2a1d54] tracking-tight">{value}</div>
+        <div className="text-3xl font-semibold text-[#8d47dc] tracking-tight">{value}</div>
         {trend && (
           <span
             className={`mb-1 text-xs font-medium px-1.5 py-0.5 rounded-md ${
@@ -64,13 +64,13 @@ export function QuickAction({
   return (
     <a
       href={href}
-      className="group bg-white rounded-2xl border border-stone-200/70 p-4 shadow-sm hover:border-indigo-300 hover:shadow transition-all flex items-center gap-3"
+      className="group bg-white rounded-2xl border border-stone-200/70 p-4 shadow-sm hover:border-[#8d47dc]/50 hover:shadow transition-all flex items-center gap-3"
     >
-      <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-700 grid place-items-center shrink-0">
+      <div className="w-10 h-10 rounded-xl bg-[#8d47dc]/10 text-[#8d47dc] grid place-items-center shrink-0">
         {icon}
       </div>
       <div className="min-w-0">
-        <div className="text-sm font-medium text-[#2a1d54] truncate">{title}</div>
+        <div className="text-sm font-medium text-[#8d47dc] truncate">{title}</div>
         <div className="text-xs text-stone-400 truncate">{subtitle}</div>
       </div>
     </a>
@@ -95,7 +95,7 @@ export function Card({
       {(title || action) && (
         <div className="flex items-center justify-between mb-4">
           {title && (
-            <h2 className="font-semibold text-[#2a1d54]">{title}</h2>
+            <h2 className="font-semibold text-[#8d47dc]">{title}</h2>
           )}
           {action}
         </div>
@@ -124,7 +124,7 @@ export function BarChart({
               </div>
             )}
             <div
-              className="w-full rounded-t-md bg-gradient-to-t from-indigo-700 to-indigo-400"
+              className="w-full rounded-t-md bg-gradient-to-t from-[#8d47dc] to-[#b985e8]"
               style={{
                 height: `${Math.max((d.value / max) * 100, d.value > 0 ? 3 : 0)}%`,
               }}
