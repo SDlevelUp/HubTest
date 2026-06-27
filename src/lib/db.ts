@@ -385,15 +385,7 @@ export function createAccount(input: {
   username: string;
   password_hash: string;
   salt: string;
-  full_name: string;
-  email: string;
-  phone: string;
-  activity: string;
-  level: string;
-  objectives: string;
-  budget: string;
-  availability: string;
-  message: string;
+  answers: Record<string, string>;
   status: "brouillon" | "soumis";
 }): PublicAccount {
   const data = load();
@@ -411,26 +403,13 @@ export function createAccount(input: {
 
 export function updateAccountProfile(
   id: number,
-  fields: Partial<
-    Pick<
-      Account,
-      | "full_name"
-      | "email"
-      | "phone"
-      | "activity"
-      | "level"
-      | "objectives"
-      | "budget"
-      | "availability"
-      | "message"
-      | "status"
-    >
-  >
+  fields: { answers?: Record<string, string>; status?: "brouillon" | "soumis" }
 ): PublicAccount | undefined {
   const data = load();
   const a = data.accounts.find((x) => x.id === id);
   if (!a) return undefined;
-  Object.assign(a, fields);
+  if (fields.answers) a.answers = fields.answers;
+  if (fields.status) a.status = fields.status;
   a.updated_at = nowSql();
   persist(data);
   return toPublic(a);

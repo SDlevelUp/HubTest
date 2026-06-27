@@ -2,13 +2,14 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import QuestionnaireFields, { QForm, emptyQForm } from "@/components/QuestionnaireFields";
+import QuestionnaireFields from "@/components/QuestionnaireFields";
+import { emptyAnswers } from "@/lib/questionnaire";
 import type { PublicAccount } from "@/lib/types";
 
 export default function EspaceClient() {
   const router = useRouter();
   const [account, setAccount] = useState<PublicAccount | null>(null);
-  const [form, setForm] = useState<QForm>(emptyQForm);
+  const [answers, setAnswers] = useState<Record<string, string>>(emptyAnswers());
   const [loading, setLoading] = useState(true);
   const [saved, setSaved] = useState("");
 
@@ -20,17 +21,7 @@ export default function EspaceClient() {
       return;
     }
     setAccount(j.account);
-    setForm({
-      full_name: j.account.full_name,
-      email: j.account.email,
-      phone: j.account.phone,
-      activity: j.account.activity,
-      level: j.account.level,
-      objectives: j.account.objectives,
-      budget: j.account.budget,
-      availability: j.account.availability,
-      message: j.account.message,
-    });
+    setAnswers({ ...emptyAnswers(), ...(j.account.answers ?? {}) });
     setLoading(false);
   }
 
@@ -45,7 +36,7 @@ export default function EspaceClient() {
     const res = await fetch("/api/espace/me", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...form, status }),
+      body: JSON.stringify({ answers, status }),
     });
     const j = await res.json();
     if (j.account) {
@@ -63,6 +54,8 @@ export default function EspaceClient() {
     return <div className="min-h-screen grid place-items-center text-stone-400">Chargement…</div>;
   }
 
+  const displayName = account?.answers?.full_name || account?.username;
+
   return (
     <div className="max-w-3xl mx-auto px-5 py-10">
       <div className="flex items-center justify-between mb-8">
@@ -78,9 +71,7 @@ export default function EspaceClient() {
 
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="font-title text-3xl text-[#8d47dc]">
-            Bonjour {account?.full_name || account?.username} 👋
-          </h1>
+          <h1 className="font-title text-3xl text-[#8d47dc]">Bonjour {displayName} 👋</h1>
           <p className="text-sm text-stone-500 mt-1">Ton espace personnel</p>
         </div>
         <span
@@ -94,8 +85,8 @@ export default function EspaceClient() {
         </span>
       </div>
 
-      <div className="bg-white border border-stone-200/70 rounded-2xl p-6 shadow-sm space-y-6">
-        <QuestionnaireFields form={form} set={setForm} />
+      <div className="bg-white border border-stone-200/70 rounded-2xl p-6 shadow-sm space-y-8">
+        <QuestionnaireFields answers={answers} set={setAnswers} />
 
         {saved && <div className="text-sm text-emerald-600">{saved}</div>}
 

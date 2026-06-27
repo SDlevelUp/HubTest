@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import QuestionnaireFields, { QForm, emptyQForm } from "@/components/QuestionnaireFields";
+import QuestionnaireFields from "@/components/QuestionnaireFields";
+import { emptyAnswers } from "@/lib/questionnaire";
 
 const input =
   "w-full border border-stone-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#8d47dc]/30";
@@ -10,7 +11,7 @@ const label = "block text-sm font-medium text-[#0a0a0a] mb-1";
 
 export default function OnboardingClient() {
   const router = useRouter();
-  const [form, setForm] = useState<QForm>(emptyQForm);
+  const [answers, setAnswers] = useState<Record<string, string>>(emptyAnswers());
   const [creds, setCreds] = useState({ username: "", password: "" });
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
@@ -23,7 +24,7 @@ export default function OnboardingClient() {
     const res = await fetch("/api/onboarding", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...form, ...creds, status }),
+      body: JSON.stringify({ answers, ...creds, status }),
     });
     setBusy(false);
     if (!res.ok) {
@@ -43,15 +44,15 @@ export default function OnboardingClient() {
 
       <h1 className="font-title text-3xl text-[#8d47dc]">Bienvenue 👋</h1>
       <p className="text-sm text-stone-500 mt-1 mb-8">
-        Remplis ce questionnaire pour qu&apos;on prépare ton accompagnement. Tu peux
+        Remplis ce questionnaire pour qu&apos;on prépare ton projet web. Tu peux
         l&apos;enregistrer en brouillon et le finir plus tard avec ton identifiant.
       </p>
 
-      <div className="bg-white border border-stone-200/70 rounded-2xl p-6 shadow-sm space-y-6">
-        <QuestionnaireFields form={form} set={setForm} />
+      <div className="bg-white border border-stone-200/70 rounded-2xl p-6 shadow-sm space-y-8">
+        <QuestionnaireFields answers={answers} set={setAnswers} />
 
         <div className="border-t border-stone-100 pt-6">
-          <h2 className="font-title text-lg text-[#8d47dc] mb-1">Tes identifiants</h2>
+          <h3 className="font-title text-base text-[#8d47dc] mb-1">Tes identifiants</h3>
           <p className="text-xs text-stone-400 mb-4">
             Choisis un identifiant et un mot de passe pour accéder à ton espace.
           </p>

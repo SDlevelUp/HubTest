@@ -78,15 +78,8 @@ export type Account = {
   username: string;
   password_hash: string;
   salt: string;
-  full_name: string;
-  email: string;
-  phone: string;
-  activity: string;
-  level: string;
-  objectives: string;
-  budget: string;
-  availability: string;
-  message: string;
+  // Réponses au questionnaire, indexées par l'id du champ (voir lib/questionnaire.ts)
+  answers: Record<string, string>;
   status: "brouillon" | "soumis";
   created_at: string;
   updated_at: string;

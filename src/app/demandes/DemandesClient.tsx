@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import type { PublicAccount } from "@/lib/types";
+import { FIELDS } from "@/lib/questionnaire";
 
 export default function DemandesClient() {
   const [accounts, setAccounts] = useState<PublicAccount[]>([]);
@@ -79,10 +80,10 @@ export default function DemandesClient() {
             >
               <div>
                 <div className="font-medium text-[#0a0a0a]">
-                  {a.full_name || a.username}
+                  {a.answers?.full_name || a.username}
                 </div>
                 <div className="text-xs text-stone-400">
-                  @{a.username} · {a.email || "sans email"}
+                  @{a.username} · {a.answers?.email || "sans email"}
                 </div>
               </div>
               <span
@@ -97,13 +98,14 @@ export default function DemandesClient() {
             </button>
             {open === a.id && (
               <div className="px-4 pb-4 text-sm grid grid-cols-1 md:grid-cols-2 gap-3 bg-stone-50/50">
-                <Field label="Téléphone" value={a.phone} />
-                <Field label="Activité" value={a.activity} />
-                <Field label="Niveau" value={a.level} />
-                <Field label="Budget" value={a.budget} />
-                <Field label="Disponibilités" value={a.availability} />
-                <Field label="Objectifs" value={a.objectives} full />
-                <Field label="Message" value={a.message} full />
+                {FIELDS.filter((f) => f.id !== "full_name" && f.id !== "email").map((f) => (
+                  <Field
+                    key={f.id}
+                    label={f.label}
+                    value={a.answers?.[f.id] ?? ""}
+                    full={f.full || f.type === "textarea"}
+                  />
+                ))}
                 <div className="md:col-span-2">
                   <button
                     onClick={() => remove(a.id)}

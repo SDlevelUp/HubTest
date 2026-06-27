@@ -1,86 +1,127 @@
 "use client";
 
-export type QForm = {
-  full_name: string;
-  email: string;
-  phone: string;
-  activity: string;
-  level: string;
-  objectives: string;
-  budget: string;
-  availability: string;
-  message: string;
-};
+import { SECTIONS, type Field } from "@/lib/questionnaire";
 
-export const emptyQForm: QForm = {
-  full_name: "",
-  email: "",
-  phone: "",
-  activity: "",
-  level: "",
-  objectives: "",
-  budget: "",
-  availability: "",
-  message: "",
-};
-
-const input =
+const inputCls =
   "w-full border border-stone-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#8d47dc]/30";
-const label = "block text-sm font-medium text-[#0a0a0a] mb-1";
+const labelCls = "block text-sm font-medium text-[#0a0a0a] mb-1";
+
+export type Answers = Record<string, string>;
 
 export default function QuestionnaireFields({
-  form,
+  answers,
   set,
 }: {
-  form: QForm;
-  set: (f: QForm) => void;
+  answers: Answers;
+  set: (a: Answers) => void;
 }) {
-  const up = (k: keyof QForm) => (e: { target: { value: string } }) =>
-    set({ ...form, [k]: e.target.value });
+  const update = (id: string, value: string) => set({ ...answers, [id]: value });
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div>
-        <label className={label}>Nom complet</label>
-        <input className={input} value={form.full_name} onChange={up("full_name")} />
+    <div className="space-y-8">
+      {SECTIONS.map((section) => (
+        <div key={section.title}>
+          <h3 className="font-title text-base text-[#8d47dc] mb-3">{section.title}</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {section.fields.map((f) => (
+              <FieldInput
+                key={f.id}
+                field={f}
+                value={answers[f.id] ?? ""}
+                onChange={(v) => update(f.id, v)}
+              />
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function FieldInput({
+  field,
+  value,
+  onChange,
+}: {
+  field: Field;
+  value: string;
+  onChange: (v: string) => void;
+}) {
+  const wrap = field.full ? "md:col-span-2" : "";
+
+  if (field.type === "textarea") {
+    return (
+      <div className={wrap}>
+        <label className={labelCls}>{field.label}</label>
+        <textarea
+          className={inputCls}
+          rows={3}
+          placeholder={field.placeholder}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+        />
       </div>
-      <div>
-        <label className={label}>Email</label>
-        <input className={input} type="email" value={form.email} onChange={up("email")} />
-      </div>
-      <div>
-        <label className={label}>Téléphone</label>
-        <input className={input} value={form.phone} onChange={up("phone")} />
-      </div>
-      <div>
-        <label className={label}>Ton activité / secteur</label>
-        <input className={input} value={form.activity} onChange={up("activity")} />
-      </div>
-      <div>
-        <label className={label}>Ton niveau</label>
-        <select className={input} value={form.level} onChange={up("level")}>
+    );
+  }
+
+  if (field.type === "select") {
+    return (
+      <div className={wrap}>
+        <label className={labelCls}>{field.label}</label>
+        <select className={inputCls} value={value} onChange={(e) => onChange(e.target.value)}>
           <option value="">—</option>
-          <option>Débutant</option>
-          <option>Intermédiaire</option>
-          <option>Avancé</option>
+          {field.options?.map((o) => (
+            <option key={o}>{o}</option>
+          ))}
         </select>
       </div>
-      <div>
-        <label className={label}>Budget envisagé</label>
-        <input className={input} value={form.budget} onChange={up("budget")} placeholder="ex. 500–1000 €" />
+    );
+  }
+
+  if (field.type === "multiselect") {
+    const selected = value ? value.split(", ").filter(Boolean) : [];
+    const toggle = (opt: string) => {
+      const next = selected.includes(opt)
+        ? selected.filter((s) => s !== opt)
+        : [...selected, opt];
+      onChange(next.join(", "));
+    };
+    return (
+      <div className={wrap}>
+        <label className={labelCls}>{field.label}</label>
+        <div className="flex flex-wrap gap-2">
+          {field.options?.map((o) => {
+            const on = selected.includes(o);
+            return (
+              <button
+                key={o}
+                type="button"
+                onClick={() => toggle(o)}
+                className={`text-sm px-3 py-1.5 rounded-full border transition-colors ${
+                  on
+                    ? "bg-[#8d47dc] text-white border-[#8d47dc]"
+                    : "bg-white text-stone-600 border-stone-200 hover:border-[#8d47dc]"
+                }`}
+              >
+                {o}
+              </button>
+            );
+          })}
+        </div>
       </div>
-      <div className="md:col-span-2">
-        <label className={label}>Tes objectifs</label>
-        <textarea className={input} rows={3} value={form.objectives} onChange={up("objectives")} />
-      </div>
-      <div>
-        <label className={label}>Tes disponibilités</label>
-        <input className={input} value={form.availability} onChange={up("availability")} placeholder="ex. soirs & week-ends" />
-      </div>
-      <div className="md:col-span-2">
-        <label className={label}>Message libre</label>
-        <textarea className={input} rows={3} value={form.message} onChange={up("message")} />
-      </div>
+    );
+  }
+
+  return (
+    <div className={wrap}>
+      <label className={labelCls}>{field.label}</label>
+      <input
+        className={inputCls}
+        type={field.type}
+        placeholder={field.placeholder}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+      />
     </div>
   );
 }
