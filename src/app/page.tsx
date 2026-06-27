@@ -4,6 +4,9 @@ import {
   getGoal,
   expensesTotalSince,
   allSales,
+  listTasks,
+  pendingInstallments,
+  revenueByProduct,
 } from "@/lib/db";
 import { StatCard, Card, BarChart, QuickAction, eur } from "@/components/ui";
 
@@ -79,11 +82,16 @@ export default function DashboardPage() {
 
   const recent = [...sales].sort((a, b) => b.sold_at.localeCompare(a.sold_at)).slice(0, 6);
 
+  const tasks = listTasks().filter((t) => !t.done).slice(0, 5);
+  const pending = pendingInstallments();
+  const topProducts = revenueByProduct(startOfYearISO()).slice(0, 5);
+  const maxTop = Math.max(1, ...topProducts.map((p) => p.total));
+
   return (
     <div className="space-y-7">
       <header className="flex items-end justify-between flex-wrap gap-3">
         <div>
-          <h1 className="font-serif text-3xl text-[#1e1b3a]">Bonjour 👋</h1>
+          <h1 className="font-serif text-3xl text-[#2a1d54]">Bonjour 👋</h1>
           <p className="text-sm text-stone-500 mt-1 capitalize">
             {new Date().toLocaleDateString("fr-FR", {
               weekday: "long",
@@ -140,7 +148,7 @@ export default function DashboardPage() {
                 </svg>
                 <div className="absolute inset-0 grid place-items-center">
                   <div className="text-center">
-                    <div className="text-2xl font-semibold text-[#1e1b3a]">
+                    <div className="text-2xl font-semibold text-[#2a1d54]">
                       {progression.toFixed(0)}%
                     </div>
                     <div className="text-[10px] text-stone-400">atteint</div>
@@ -158,6 +166,70 @@ export default function DashboardPage() {
                 En définir un
               </a>
             </div>
+          )}
+        </Card>
+      </div>
+
+      <div className="grid lg:grid-cols-3 gap-5">
+        <Card title="Top produits" action={<a href="/finances" className="text-sm text-indigo-600 hover:underline">Analyse</a>}>
+          {topProducts.length === 0 ? (
+            <div className="text-sm text-stone-400 py-4">Pas encore de données.</div>
+          ) : (
+            <div className="space-y-3">
+              {topProducts.map((p) => (
+                <div key={p.name}>
+                  <div className="flex justify-between text-sm mb-1">
+                    <span className="text-stone-600 truncate pr-2">{p.name}</span>
+                    <span className="font-medium text-[#2a1d54]">{eur(p.total)}</span>
+                  </div>
+                  <div className="h-2 bg-stone-100 rounded-full">
+                    <div
+                      className="h-2 rounded-full bg-[#e8920c]"
+                      style={{ width: `${(p.total / maxTop) * 100}%` }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </Card>
+
+        <Card title="Tâches du jour" action={<a href="/taches" className="text-sm text-indigo-600 hover:underline">Tout voir</a>}>
+          {tasks.length === 0 ? (
+            <div className="text-sm text-stone-400 py-4">Aucune tâche en cours 🎉</div>
+          ) : (
+            <ul className="space-y-2">
+              {tasks.map((t) => (
+                <li key={t.id} className="flex items-center gap-2 text-sm">
+                  <span className="w-4 h-4 rounded border border-stone-300 shrink-0" />
+                  <span className="text-stone-600 flex-1 truncate">{t.title}</span>
+                  {t.due_date && (
+                    <span className="text-[11px] text-stone-400">
+                      {new Date(t.due_date).toLocaleDateString("fr-FR")}
+                    </span>
+                  )}
+                </li>
+              ))}
+            </ul>
+          )}
+        </Card>
+
+        <Card title="Alertes paiements" action={<a href="/finances" className="text-sm text-indigo-600 hover:underline">Voir</a>}>
+          {pending.length === 0 ? (
+            <div className="text-sm text-stone-400 py-4">Aucune échéance en attente ✅</div>
+          ) : (
+            <ul className="space-y-2">
+              {pending.slice(0, 5).map((s) => (
+                <li key={s.id} className="flex items-center justify-between text-sm">
+                  <span className="text-stone-600 truncate pr-2">
+                    {s.client_name ?? s.product_name ?? "Vente"}
+                  </span>
+                  <span className="text-xs px-2 py-0.5 rounded-md bg-amber-100 text-amber-700">
+                    {s.installments_paid}/{s.installments_total} payé
+                  </span>
+                </li>
+              ))}
+            </ul>
           )}
         </Card>
       </div>
@@ -180,7 +252,7 @@ export default function DashboardPage() {
                     <div className="text-xs text-stone-400">net {eur(s.amount_net)}</div>
                   </div>
                 </div>
-                <div className="font-semibold text-[#1e1b3a]">{eur(s.amount_gross)}</div>
+                <div className="font-semibold text-[#2a1d54]">{eur(s.amount_gross)}</div>
               </div>
             ))}
           </div>

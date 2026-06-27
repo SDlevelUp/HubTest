@@ -14,7 +14,9 @@ async function api<T>(url: string, init?: RequestInit): Promise<T> {
   return res.json();
 }
 
-const TABS = ["Ventes", "Produits", "Dépenses", "Objectif"] as const;
+import { BarChart, eur } from "@/components/ui";
+
+const TABS = ["Ventes", "Produits", "Dépenses", "Objectif", "Analyse"] as const;
 
 export default function FinancesClient() {
   const [tab, setTab] = useState<(typeof TABS)[number]>("Ventes");
@@ -47,7 +49,7 @@ export default function FinancesClient() {
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="font-serif text-3xl text-[#1e1b3a]">Pilotage &amp; finances</h1>
+        <h1 className="font-serif text-3xl text-[#2a1d54]">Pilotage &amp; finances</h1>
         <p className="text-sm text-stone-500 mt-1">Ventes, produits, dépenses et objectifs</p>
       </header>
       <div className="inline-flex gap-1 bg-white border border-stone-200/70 rounded-xl p-1 shadow-sm">
@@ -57,8 +59,8 @@ export default function FinancesClient() {
             onClick={() => setTab(t)}
             className={`px-4 py-2 text-sm rounded-lg transition-colors ${
               tab === t
-                ? "bg-[#1e1b3a] text-white font-medium"
-                : "text-stone-500 hover:text-[#1e1b3a]"
+                ? "bg-[#2a1d54] text-white font-medium"
+                : "text-stone-500 hover:text-[#2a1d54]"
             }`}
           >
             {t}
@@ -77,6 +79,53 @@ export default function FinancesClient() {
       {tab === "Produits" && <ProduitsTab products={products} refresh={refresh} />}
       {tab === "Dépenses" && <DepensesTab expenses={expenses} refresh={refresh} />}
       {tab === "Objectif" && <ObjectifTab goals={goals} refresh={refresh} />}
+      {tab === "Analyse" && <AnalyseTab sales={sales} />}
+    </div>
+  );
+}
+
+function AnalyseTab({ sales }: { sales: SaleRow[] }) {
+  const byProduct = new Map<string, number>();
+  for (const s of sales) {
+    const name = s.product_name ?? "Sans produit";
+    byProduct.set(name, (byProduct.get(name) ?? 0) + s.amount_gross);
+  }
+  const data = [...byProduct.entries()]
+    .map(([label, value]) => ({ label, value }))
+    .sort((a, b) => b.value - a.value);
+  const total = data.reduce((s, d) => s + d.value, 0);
+
+  return (
+    <div className="space-y-4">
+      <div className="flex justify-end">
+        <a
+          href="/api/sales/export"
+          className="inline-flex items-center gap-2 bg-white border border-stone-200 rounded-lg px-4 py-2 text-sm text-[#2a1d54] hover:border-[#e8920c] shadow-sm"
+        >
+          ⬇ Exporter les ventes (CSV)
+        </a>
+      </div>
+      <div className="bg-white border border-stone-200/70 rounded-2xl p-5 shadow-sm">
+        <h2 className="font-semibold text-[#2a1d54] mb-4">Répartition du CA par produit</h2>
+        {data.length === 0 ? (
+          <div className="text-sm text-stone-400 py-6 text-center">Aucune vente à analyser.</div>
+        ) : (
+          <>
+            <BarChart data={data} format={eur} />
+            <div className="mt-5 divide-y divide-stone-100">
+              {data.map((d) => (
+                <div key={d.label} className="flex items-center justify-between py-2 text-sm">
+                  <span className="text-stone-600">{d.label}</span>
+                  <span className="text-stone-400">
+                    {total ? Math.round((d.value / total) * 100) : 0}% ·{" "}
+                    <span className="font-medium text-[#2a1d54]">{eur(d.value)}</span>
+                  </span>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 }
@@ -142,7 +191,7 @@ function VentesTab({
     <div className="space-y-4">
       <div className="bg-white border border-stone-200/70 rounded-2xl p-5 shadow-sm grid grid-cols-2 md:grid-cols-4 gap-3">
         <select
-          className="border border-stone-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-300"
+          className="border border-stone-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#e8920c]/40"
           value={form.client_id}
           onChange={(e) => setForm({ ...form, client_id: e.target.value })}
         >
@@ -154,7 +203,7 @@ function VentesTab({
           ))}
         </select>
         <select
-          className="border border-stone-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-300"
+          className="border border-stone-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#e8920c]/40"
           value={form.product_id}
           onChange={(e) => setForm({ ...form, product_id: e.target.value })}
         >
@@ -166,21 +215,21 @@ function VentesTab({
           ))}
         </select>
         <input
-          className="border border-stone-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-300"
+          className="border border-stone-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#e8920c]/40"
           placeholder="Montant brut €"
           type="number"
           value={form.amount_gross}
           onChange={(e) => setForm({ ...form, amount_gross: e.target.value })}
         />
         <input
-          className="border border-stone-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-300"
+          className="border border-stone-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#e8920c]/40"
           placeholder="Montant net €"
           type="number"
           value={form.amount_net}
           onChange={(e) => setForm({ ...form, amount_net: e.target.value })}
         />
         <select
-          className="border border-stone-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-300"
+          className="border border-stone-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#e8920c]/40"
           value={form.payment_plan}
           onChange={(e) => setForm({ ...form, payment_plan: e.target.value })}
         >
@@ -190,7 +239,7 @@ function VentesTab({
         </select>
         {form.payment_plan !== "comptant" && (
           <input
-            className="border border-stone-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-300"
+            className="border border-stone-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#e8920c]/40"
             placeholder="Nb échéances"
             type="number"
             value={form.installments_total}
@@ -198,14 +247,14 @@ function VentesTab({
           />
         )}
         <input
-          className="border border-stone-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-300"
+          className="border border-stone-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#e8920c]/40"
           type="date"
           value={form.sold_at}
           onChange={(e) => setForm({ ...form, sold_at: e.target.value })}
         />
         <button
           onClick={add}
-          className="bg-[#1e1b3a] text-white rounded-lg px-4 py-2 text-sm font-medium hover:bg-indigo-900 transition-colors"
+          className="bg-[#2a1d54] text-white rounded-lg px-4 py-2 text-sm font-medium hover:bg-[#3a2a6e] transition-colors"
         >
           Ajouter la vente
         </button>
@@ -280,13 +329,13 @@ function ProduitsTab({
     <div className="space-y-4">
       <div className="bg-white border border-stone-200/70 rounded-2xl p-5 shadow-sm grid grid-cols-2 md:grid-cols-4 gap-3 items-center">
         <input
-          className="border border-stone-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-300"
+          className="border border-stone-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#e8920c]/40"
           placeholder="Nom du produit"
           value={form.name}
           onChange={(e) => setForm({ ...form, name: e.target.value })}
         />
         <input
-          className="border border-stone-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-300"
+          className="border border-stone-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#e8920c]/40"
           placeholder="Prix €"
           type="number"
           value={form.price}
@@ -302,7 +351,7 @@ function ProduitsTab({
         </label>
         <button
           onClick={add}
-          className="bg-[#1e1b3a] text-white rounded-lg px-4 py-2 text-sm font-medium hover:bg-indigo-900 transition-colors"
+          className="bg-[#2a1d54] text-white rounded-lg px-4 py-2 text-sm font-medium hover:bg-[#3a2a6e] transition-colors"
         >
           Ajouter
         </button>
@@ -366,33 +415,33 @@ function DepensesTab({
     <div className="space-y-4">
       <div className="bg-white border border-stone-200/70 rounded-2xl p-5 shadow-sm grid grid-cols-2 md:grid-cols-4 gap-3">
         <input
-          className="border border-stone-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-300"
+          className="border border-stone-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#e8920c]/40"
           placeholder="Libellé"
           value={form.label}
           onChange={(e) => setForm({ ...form, label: e.target.value })}
         />
         <input
-          className="border border-stone-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-300"
+          className="border border-stone-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#e8920c]/40"
           placeholder="Montant €"
           type="number"
           value={form.amount}
           onChange={(e) => setForm({ ...form, amount: e.target.value })}
         />
         <input
-          className="border border-stone-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-300"
+          className="border border-stone-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#e8920c]/40"
           placeholder="Catégorie"
           value={form.category}
           onChange={(e) => setForm({ ...form, category: e.target.value })}
         />
         <input
-          className="border border-stone-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-300"
+          className="border border-stone-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#e8920c]/40"
           type="date"
           value={form.spent_at}
           onChange={(e) => setForm({ ...form, spent_at: e.target.value })}
         />
         <button
           onClick={add}
-          className="bg-[#1e1b3a] text-white rounded-lg px-4 py-2 text-sm font-medium hover:bg-indigo-900 transition-colors col-span-2 md:col-span-1"
+          className="bg-[#2a1d54] text-white rounded-lg px-4 py-2 text-sm font-medium hover:bg-[#3a2a6e] transition-colors col-span-2 md:col-span-1"
         >
           Ajouter
         </button>
@@ -436,13 +485,13 @@ function ObjectifTab({ goals, refresh }: { goals: Goal[]; refresh: () => void })
     <div className="bg-white border border-stone-200/70 rounded-2xl p-5 shadow-sm space-y-3 max-w-sm">
       <div className="text-sm text-stone-500">Objectif de CA brut pour {year}</div>
       <input
-        className="border border-stone-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-300 w-full"
+        className="border border-stone-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#e8920c]/40 w-full"
         type="number"
         placeholder="Montant €"
         value={amount}
         onChange={(e) => setAmount(e.target.value)}
       />
-      <button onClick={save} className="bg-[#1e1b3a] text-white rounded-lg px-4 py-2 text-sm font-medium hover:bg-indigo-900 transition-colors">
+      <button onClick={save} className="bg-[#2a1d54] text-white rounded-lg px-4 py-2 text-sm font-medium hover:bg-[#3a2a6e] transition-colors">
         Enregistrer
       </button>
     </div>

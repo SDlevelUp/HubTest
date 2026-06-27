@@ -32,7 +32,7 @@ export function StatCard({
         )}
       </div>
       <div className="flex items-end gap-2 mt-3">
-        <div className="text-3xl font-semibold text-[#1e1b3a] tracking-tight">{value}</div>
+        <div className="text-3xl font-semibold text-[#2a1d54] tracking-tight">{value}</div>
         {trend && (
           <span
             className={`mb-1 text-xs font-medium px-1.5 py-0.5 rounded-md ${
@@ -70,7 +70,7 @@ export function QuickAction({
         {icon}
       </div>
       <div className="min-w-0">
-        <div className="text-sm font-medium text-[#1e1b3a] truncate">{title}</div>
+        <div className="text-sm font-medium text-[#2a1d54] truncate">{title}</div>
         <div className="text-xs text-stone-400 truncate">{subtitle}</div>
       </div>
     </a>
@@ -95,7 +95,7 @@ export function Card({
       {(title || action) && (
         <div className="flex items-center justify-between mb-4">
           {title && (
-            <h2 className="font-semibold text-[#1e1b3a]">{title}</h2>
+            <h2 className="font-semibold text-[#2a1d54]">{title}</h2>
           )}
           {action}
         </div>

@@ -41,6 +41,43 @@ const groups: {
       },
     ],
   },
+  {
+    title: "Croissance",
+    links: [
+      {
+        href: "/contenu",
+        label: "Contenu & lancements",
+        icon: (
+          <path
+            d="M4 4h16v12H5l-1 4V4Z"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinejoin="round"
+          />
+        ),
+      },
+    ],
+  },
+  {
+    title: "Organisation",
+    links: [
+      {
+        href: "/taches",
+        label: "Mes tâches",
+        icon: (
+          <path
+            d="M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        ),
+      },
+    ],
+  },
 ];
 
 export default function Sidebar() {
@@ -52,7 +89,7 @@ export default function Sidebar() {
           H
         </div>
         <div>
-          <div className="font-serif text-lg font-semibold text-[#1e1b3a] leading-tight">
+          <div className="font-serif text-lg font-semibold text-[#2a1d54] leading-tight">
             Mon Hub
           </div>
           <div className="text-[11px] text-stone-400">Pilotage d&apos;activité</div>

@@ -42,36 +42,36 @@ export default function ClientsClient() {
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="font-serif text-3xl text-[#1e1b3a]">Clients</h1>
+        <h1 className="font-serif text-3xl text-[#2a1d54]">Clients</h1>
         <p className="text-sm text-stone-500 mt-1">Tes fiches clients</p>
       </header>
 
       <div className="bg-white border border-stone-200/70 rounded-2xl p-5 shadow-sm grid grid-cols-2 md:grid-cols-5 gap-3">
         <input
-          className="border border-stone-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-300"
+          className="border border-stone-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#e8920c]/40"
           placeholder="Nom"
           value={form.name}
           onChange={(e) => setForm({ ...form, name: e.target.value })}
         />
         <input
-          className="border border-stone-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-300"
+          className="border border-stone-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#e8920c]/40"
           placeholder="Email"
           value={form.email}
           onChange={(e) => setForm({ ...form, email: e.target.value })}
         />
         <input
-          className="border border-stone-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-300"
+          className="border border-stone-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#e8920c]/40"
           placeholder="Téléphone"
           value={form.phone}
           onChange={(e) => setForm({ ...form, phone: e.target.value })}
         />
         <input
-          className="border border-stone-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-300"
+          className="border border-stone-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#e8920c]/40"
           placeholder="Notes"
           value={form.notes}
           onChange={(e) => setForm({ ...form, notes: e.target.value })}
         />
-        <button onClick={add} className="bg-[#1e1b3a] text-white rounded-lg px-4 py-2 text-sm font-medium hover:bg-indigo-900 transition-colors">
+        <button onClick={add} className="bg-[#2a1d54] text-white rounded-lg px-4 py-2 text-sm font-medium hover:bg-[#3a2a6e] transition-colors">
           Ajouter
         </button>
       </div>
@@ -98,7 +98,7 @@ export default function ClientsClient() {
         <div className="bg-white border border-stone-200/70 rounded-2xl p-5 shadow-sm">
           {selected ? (
             <div className="space-y-2 text-sm">
-              <div className="font-serif text-xl text-[#1e1b3a]">{selected.name}</div>
+              <div className="font-serif text-xl text-[#2a1d54]">{selected.name}</div>
               <div>Email : {selected.email ?? "—"}</div>
               <div>Téléphone : {selected.phone ?? "—"}</div>
               <div>Notes : {selected.notes ?? "—"}</div>

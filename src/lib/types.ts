@@ -42,3 +42,33 @@ export type Goal = {
   year: number;
   target_amount: number;
 };
+
+export type Task = {
+  id: number;
+  title: string;
+  done: number;
+  priority: string;
+  due_date: string | null;
+  created_at: string;
+};
+
+export type ContentItem = {
+  id: number;
+  title: string;
+  channel: string;
+  status: string;
+  date: string | null;
+  notes: string | null;
+  created_at: string;
+};
+
+export type Launch = {
+  id: number;
+  name: string;
+  start_date: string | null;
+  end_date: string | null;
+  goal_amount: number;
+  status: string;
+  notes: string | null;
+  created_at: string;
+};

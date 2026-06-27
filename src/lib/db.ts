@@ -1,6 +1,15 @@
 import path from "node:path";
 import fs from "node:fs";
-import type { Product, Client, Sale, Expense, Goal } from "./types";
+import type {
+  Product,
+  Client,
+  Sale,
+  Expense,
+  Goal,
+  Task,
+  ContentItem,
+  Launch,
+} from "./types";
 
 const dataDir = path.join(process.cwd(), "data");
 const dataPath = path.join(dataDir, "hub.json");
@@ -12,16 +21,31 @@ type DbShape = {
   sales: Sale[];
   expenses: Expense[];
   goals: Goal[];
+  tasks: Task[];
+  content: ContentItem[];
+  launches: Launch[];
 };
 
 function empty(): DbShape {
   return {
-    seq: { products: 0, clients: 0, sales: 0, expenses: 0, goals: 0 },
+    seq: {
+      products: 0,
+      clients: 0,
+      sales: 0,
+      expenses: 0,
+      goals: 0,
+      tasks: 0,
+      content: 0,
+      launches: 0,
+    },
     products: [],
     clients: [],
     sales: [],
     expenses: [],
     goals: [],
+    tasks: [],
+    content: [],
+    launches: [],
   };
 }
 
@@ -221,4 +245,124 @@ export function upsertGoal(year: number, target_amount: number) {
     data.goals.push({ id: nextId(data, "goals"), year, target_amount });
   }
   persist(data);
+}
+
+// ---------- Tasks ----------
+export function listTasks(): Task[] {
+  return [...load().tasks].sort((a, b) => {
+    if (a.done !== b.done) return a.done - b.done;
+    const da = a.due_date ?? "9999";
+    const db = b.due_date ?? "9999";
+    return da.localeCompare(db);
+  });
+}
+export function createTask(
+  title: string,
+  priority: string,
+  due_date: string | null
+) {
+  const data = load();
+  data.tasks.push({
+    id: nextId(data, "tasks"),
+    title,
+    done: 0,
+    priority,
+    due_date,
+    created_at: nowSql(),
+  });
+  persist(data);
+}
+export function toggleTask(id: number, done: boolean) {
+  const data = load();
+  const t = data.tasks.find((x) => x.id === id);
+  if (t) t.done = done ? 1 : 0;
+  persist(data);
+}
+export function deleteTask(id: number) {
+  const data = load();
+  data.tasks = data.tasks.filter((t) => t.id !== id);
+  persist(data);
+}
+
+// ---------- Content ----------
+export function listContent(): ContentItem[] {
+  return [...load().content].sort((a, b) =>
+    (a.date ?? "").localeCompare(b.date ?? "")
+  );
+}
+export function createContent(input: {
+  title: string;
+  channel: string;
+  status: string;
+  date: string | null;
+  notes: string | null;
+}) {
+  const data = load();
+  data.content.push({
+    id: nextId(data, "content"),
+    ...input,
+    created_at: nowSql(),
+  });
+  persist(data);
+}
+export function updateContentStatus(id: number, status: string) {
+  const data = load();
+  const c = data.content.find((x) => x.id === id);
+  if (c) c.status = status;
+  persist(data);
+}
+export function deleteContent(id: number) {
+  const data = load();
+  data.content = data.content.filter((c) => c.id !== id);
+  persist(data);
+}
+
+// ---------- Launches ----------
+export function listLaunches(): Launch[] {
+  return [...load().launches].sort((a, b) =>
+    (b.start_date ?? "").localeCompare(a.start_date ?? "")
+  );
+}
+export function createLaunch(input: {
+  name: string;
+  start_date: string | null;
+  end_date: string | null;
+  goal_amount: number;
+  status: string;
+  notes: string | null;
+}) {
+  const data = load();
+  data.launches.push({
+    id: nextId(data, "launches"),
+    ...input,
+    created_at: nowSql(),
+  });
+  persist(data);
+}
+export function deleteLaunch(id: number) {
+  const data = load();
+  data.launches = data.launches.filter((l) => l.id !== id);
+  persist(data);
+}
+
+// ---------- Pending installments (alerts) ----------
+export function pendingInstallments(): SaleRow[] {
+  return listSales().filter(
+    (s) => s.payment_plan !== "comptant" && s.installments_paid < s.installments_total
+  );
+}
+
+// ---------- Revenue by product ----------
+export function revenueByProduct(sinceISO: string): { name: string; total: number }[] {
+  const data = load();
+  const map = new Map<string, number>();
+  for (const s of data.sales) {
+    if (s.sold_at < sinceISO) continue;
+    const name =
+      data.products.find((p) => p.id === s.product_id)?.name ?? "Sans produit";
+    map.set(name, (map.get(name) ?? 0) + s.amount_gross);
+  }
+  return [...map.entries()]
+    .map(([name, total]) => ({ name, total }))
+    .sort((a, b) => b.total - a.total);
 }
