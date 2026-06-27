@@ -1,5 +1,9 @@
-import { getDb } from "@/lib/db";
-import type { Sale, Goal } from "@/lib/types";
+import {
+  salesSince,
+  recurringSalesSince,
+  getGoal,
+  expensesTotalSince,
+} from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 
@@ -14,38 +18,28 @@ function startOfYearISO() {
 }
 
 export default function DashboardPage() {
-  const db = getDb();
   const year = new Date().getFullYear();
 
-  const sales = db
-    .prepare("SELECT * FROM sales WHERE sold_at >= ? ORDER BY sold_at DESC")
-    .all(startOfYearISO()) as Sale[];
-
+  const sales = salesSince(startOfYearISO());
   const monthSales = sales.filter((s) => s.sold_at >= startOfMonthISO());
 
   const caBrutAnnee = sales.reduce((sum, s) => sum + s.amount_gross, 0);
   const caNetAnnee = sales.reduce((sum, s) => sum + s.amount_net, 0);
   const caBrutMois = monthSales.reduce((sum, s) => sum + s.amount_gross, 0);
 
-  const recurringSales = db
-    .prepare(
-      `SELECT sales.* FROM sales
-       JOIN products ON products.id = sales.product_id
-       WHERE products.recurring = 1 AND sales.sold_at >= ?`
-    )
-    .all(startOfMonthISO()) as Sale[];
-  const mrr = recurringSales.reduce((sum, s) => sum + s.amount_net, 0);
+  const mrr = recurringSalesSince(startOfMonthISO()).reduce(
+    (sum, s) => sum + s.amount_net,
+    0
+  );
 
   const panierMoyen = sales.length ? caBrutAnnee / sales.length : 0;
 
-  const goal = db.prepare("SELECT * FROM goals WHERE year = ?").get(year) as
-    | Goal
-    | undefined;
-  const progression = goal ? Math.min(100, (caBrutAnnee / goal.target_amount) * 100) : null;
+  const goal = getGoal(year);
+  const progression = goal
+    ? Math.min(100, (caBrutAnnee / goal.target_amount) * 100)
+    : null;
 
-  const expensesMonth = db
-    .prepare("SELECT SUM(amount) AS total FROM expenses WHERE spent_at >= ?")
-    .get(startOfMonthISO()) as { total: number | null };
+  const depensesMois = expensesTotalSince(startOfMonthISO());
 
   const cards = [
     { label: "CA brut (année)", value: `${caBrutAnnee.toFixed(0)} €` },
@@ -53,8 +47,10 @@ export default function DashboardPage() {
     { label: "CA brut (mois)", value: `${caBrutMois.toFixed(0)} €` },
     { label: "MRR (mois)", value: `${mrr.toFixed(0)} €` },
     { label: "Panier moyen", value: `${panierMoyen.toFixed(0)} €` },
-    { label: "Dépenses (mois)", value: `${(expensesMonth.total ?? 0).toFixed(0)} €` },
+    { label: "Dépenses (mois)", value: `${depensesMois.toFixed(0)} €` },
   ];
+
+  const sorted = [...sales].sort((a, b) => b.sold_at.localeCompare(a.sold_at));
 
   return (
     <div className="space-y-8">
@@ -93,7 +89,7 @@ export default function DashboardPage() {
       <div className="bg-white border border-stone-200 rounded-xl p-4">
         <div className="text-sm font-medium text-stone-700 mb-2">Dernières ventes</div>
         <ul className="text-sm divide-y divide-stone-100">
-          {sales.slice(0, 5).map((s) => (
+          {sorted.slice(0, 5).map((s) => (
             <li key={s.id} className="py-2 flex justify-between">
               <span>{new Date(s.sold_at).toLocaleDateString("fr-FR")}</span>
               <span className="font-medium">{s.amount_gross.toFixed(0)} €</span>

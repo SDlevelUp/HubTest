@@ -1,22 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getDb } from "@/lib/db";
+import { listGoals, upsertGoal } from "@/lib/db";
 
 export async function GET() {
-  const db = getDb();
-  const rows = db.prepare("SELECT * FROM goals ORDER BY year DESC").all();
-  return NextResponse.json(rows);
+  return NextResponse.json(listGoals());
 }
 
 export async function POST(req: NextRequest) {
-  const body = await req.json();
-  const { year, target_amount } = body;
+  const { year, target_amount } = await req.json();
   if (typeof year !== "number" || typeof target_amount !== "number") {
     return NextResponse.json({ error: "year et target_amount requis" }, { status: 400 });
   }
-  const db = getDb();
-  db.prepare(
-    `INSERT INTO goals (year, target_amount) VALUES (?, ?)
-     ON CONFLICT(year) DO UPDATE SET target_amount = excluded.target_amount`
-  ).run(year, target_amount);
+  upsertGoal(year, target_amount);
   return NextResponse.json({ ok: true }, { status: 201 });
 }
