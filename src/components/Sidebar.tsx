@@ -39,6 +39,20 @@ const groups: {
         label: "Fiches clients",
         icon: <path d="M16 11a4 4 0 1 0-8 0 4 4 0 0 0 8 0Zm-4 2c-4 0-8 2-8 5v2h16v-2c0-3-4-5-8-5Z" />,
       },
+      {
+        href: "/demandes",
+        label: "Onboarding clients",
+        icon: (
+          <path
+            d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6Zm0 0v6h6M9 13l2 2 4-4"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        ),
+      },
     ],
   },
   {

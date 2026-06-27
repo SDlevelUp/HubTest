@@ -9,6 +9,8 @@ import type {
   Task,
   ContentItem,
   Launch,
+  Account,
+  PublicAccount,
 } from "./types";
 
 const dataDir = path.join(process.cwd(), "data");
@@ -24,6 +26,7 @@ type DbShape = {
   tasks: Task[];
   content: ContentItem[];
   launches: Launch[];
+  accounts: Account[];
 };
 
 function empty(): DbShape {
@@ -37,6 +40,7 @@ function empty(): DbShape {
       tasks: 0,
       content: 0,
       launches: 0,
+      accounts: 0,
     },
     products: [],
     clients: [],
@@ -46,6 +50,7 @@ function empty(): DbShape {
     tasks: [],
     content: [],
     launches: [],
+    accounts: [],
   };
 }
 
@@ -350,6 +355,95 @@ export function pendingInstallments(): SaleRow[] {
   return listSales().filter(
     (s) => s.payment_plan !== "comptant" && s.installments_paid < s.installments_total
   );
+}
+
+// ---------- Accounts (espace client) ----------
+function toPublic(a: Account): PublicAccount {
+  const { password_hash: _h, salt: _s, ...rest } = a;
+  void _h;
+  void _s;
+  return rest;
+}
+
+export function findAccountByUsername(username: string): Account | undefined {
+  return load().accounts.find(
+    (a) => a.username.toLowerCase() === username.toLowerCase()
+  );
+}
+
+export function getAccount(id: number): Account | undefined {
+  return load().accounts.find((a) => a.id === id);
+}
+
+export function listAccounts(): PublicAccount[] {
+  return [...load().accounts]
+    .sort((a, b) => b.created_at.localeCompare(a.created_at))
+    .map(toPublic);
+}
+
+export function createAccount(input: {
+  username: string;
+  password_hash: string;
+  salt: string;
+  full_name: string;
+  email: string;
+  phone: string;
+  activity: string;
+  level: string;
+  objectives: string;
+  budget: string;
+  availability: string;
+  message: string;
+  status: "brouillon" | "soumis";
+}): PublicAccount {
+  const data = load();
+  const now = nowSql();
+  const account: Account = {
+    id: nextId(data, "accounts"),
+    ...input,
+    created_at: now,
+    updated_at: now,
+  };
+  data.accounts.push(account);
+  persist(data);
+  return toPublic(account);
+}
+
+export function updateAccountProfile(
+  id: number,
+  fields: Partial<
+    Pick<
+      Account,
+      | "full_name"
+      | "email"
+      | "phone"
+      | "activity"
+      | "level"
+      | "objectives"
+      | "budget"
+      | "availability"
+      | "message"
+      | "status"
+    >
+  >
+): PublicAccount | undefined {
+  const data = load();
+  const a = data.accounts.find((x) => x.id === id);
+  if (!a) return undefined;
+  Object.assign(a, fields);
+  a.updated_at = nowSql();
+  persist(data);
+  return toPublic(a);
+}
+
+export function deleteAccount(id: number) {
+  const data = load();
+  data.accounts = data.accounts.filter((a) => a.id !== id);
+  persist(data);
+}
+
+export function publicAccount(a: Account): PublicAccount {
+  return toPublic(a);
 }
 
 // ---------- Revenue by product ----------

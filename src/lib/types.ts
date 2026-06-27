@@ -72,3 +72,25 @@ export type Launch = {
   notes: string | null;
   created_at: string;
 };
+
+export type Account = {
+  id: number;
+  username: string;
+  password_hash: string;
+  salt: string;
+  full_name: string;
+  email: string;
+  phone: string;
+  activity: string;
+  level: string;
+  objectives: string;
+  budget: string;
+  availability: string;
+  message: string;
+  status: "brouillon" | "soumis";
+  created_at: string;
+  updated_at: string;
+};
+
+// Account without secrets, safe to send to the client
+export type PublicAccount = Omit<Account, "password_hash" | "salt">;
