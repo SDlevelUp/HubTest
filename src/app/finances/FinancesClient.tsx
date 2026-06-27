@@ -49,7 +49,7 @@ export default function FinancesClient() {
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="font-serif text-3xl text-[#8d47dc]">Pilotage &amp; finances</h1>
+        <h1 className="font-title text-3xl text-[#8d47dc]">Pilotage &amp; finances</h1>
         <p className="text-sm text-stone-500 mt-1">Ventes, produits, dépenses et objectifs</p>
       </header>
       <div className="inline-flex gap-1 bg-white border border-stone-200/70 rounded-xl p-1 shadow-sm">

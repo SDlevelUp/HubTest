@@ -62,7 +62,7 @@ export default function TachesClient() {
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="font-serif text-3xl text-[#8d47dc]">Mes tâches</h1>
+        <h1 className="font-title text-3xl text-[#8d47dc]">Mes tâches</h1>
         <p className="text-sm text-stone-500 mt-1">To-do et priorités</p>
       </header>
 

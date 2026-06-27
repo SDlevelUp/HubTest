@@ -91,7 +91,7 @@ export default function DashboardPage() {
     <div className="space-y-7">
       <header className="flex items-end justify-between flex-wrap gap-3">
         <div>
-          <h1 className="font-serif text-3xl text-[#8d47dc]">Bonjour 👋</h1>
+          <h1 className="font-title text-3xl text-[#8d47dc]">Bonjour 👋</h1>
           <p className="text-sm text-stone-500 mt-1 capitalize">
             {new Date().toLocaleDateString("fr-FR", {
               weekday: "long",

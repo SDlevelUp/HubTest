@@ -7,6 +7,8 @@
   --accent: #f5a93f;
   --background: var(--bg);
   --foreground: var(--text);
+  --font-sans: "Manrope", system-ui, -apple-system, sans-serif;
+  --font-title: "Outfit", system-ui, sans-serif;
 }
 
 @theme inline {
@@ -14,14 +16,16 @@
   --color-foreground: var(--foreground);
   --color-title: var(--title);
   --color-accent: var(--accent);
-  --font-serif: Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-sans);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
+  font-family: var(--font-sans);
 }
 
-.font-serif {
-  font-family: Georgia, "Times New Roman", serif;
+.font-title {
+  font-family: var(--font-title);
+  letter-spacing: -0.01em;
 }

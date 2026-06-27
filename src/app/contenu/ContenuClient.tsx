@@ -43,7 +43,7 @@ export default function ContenuClient() {
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="font-serif text-3xl text-[#8d47dc]">Contenu &amp; lancements</h1>
+        <h1 className="font-title text-3xl text-[#8d47dc]">Contenu &amp; lancements</h1>
         <p className="text-sm text-stone-500 mt-1">Calendrier éditorial et suivi des lancements</p>
       </header>
 
