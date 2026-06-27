@@ -5,7 +5,7 @@ import {
   expensesTotalSince,
   allSales,
 } from "@/lib/db";
-import { StatCard, Card, BarChart, eur } from "@/components/ui";
+import { StatCard, Card, BarChart, QuickAction, eur } from "@/components/ui";
 
 export const dynamic = "force-dynamic";
 
@@ -48,6 +48,21 @@ export default function DashboardPage() {
   const panierMoyen = sales.length ? caBrutAnnee / sales.length : 0;
   const depensesMois = expensesTotalSince(startOfMonthISO());
 
+  // CA du mois précédent (pour la tendance)
+  const now = new Date();
+  const startPrevMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1).toISOString();
+  const startThisMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+  const caPrevMois = allSales()
+    .filter((s) => s.sold_at >= startPrevMonth && s.sold_at < startThisMonth)
+    .reduce((sum, s) => sum + s.amount_gross, 0);
+  const monthTrend =
+    caPrevMois > 0
+      ? {
+          dir: (caBrutMois >= caPrevMois ? "up" : "down") as "up" | "down",
+          text: `${Math.abs(Math.round(((caBrutMois - caPrevMois) / caPrevMois) * 100))}%`,
+        }
+      : undefined;
+
   const goal = getGoal(year);
   const progression = goal ? Math.min(100, (caBrutAnnee / goal.target_amount) * 100) : 0;
 
@@ -68,23 +83,37 @@ export default function DashboardPage() {
     <div className="space-y-7">
       <header className="flex items-end justify-between flex-wrap gap-3">
         <div>
-          <h1 className="font-serif text-3xl text-[#1e1b3a]">Tableau de bord</h1>
-          <p className="text-sm text-stone-500 mt-1">
-            Vue d&apos;ensemble de ton activité · {year}
+          <h1 className="font-serif text-3xl text-[#1e1b3a]">Bonjour 👋</h1>
+          <p className="text-sm text-stone-500 mt-1 capitalize">
+            {new Date().toLocaleDateString("fr-FR", {
+              weekday: "long",
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            })}
           </p>
-        </div>
-        <div className="text-sm text-stone-500">
-          {new Date().toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" })}
         </div>
       </header>
 
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
         <StatCard label="CA brut · année" value={eur(caBrutAnnee)} accent="indigo" icon={<Icon>{icons.cash}</Icon>} />
         <StatCard label="CA net · année" value={eur(caNetAnnee)} accent="green" icon={<Icon>{icons.trend}</Icon>} />
-        <StatCard label="CA brut · ce mois" value={eur(caBrutMois)} accent="indigo" icon={<Icon>{icons.trend}</Icon>} />
+        <StatCard label="CA brut · ce mois" value={eur(caBrutMois)} accent="indigo" trend={monthTrend} icon={<Icon>{icons.trend}</Icon>} />
         <StatCard label="MRR · ce mois" value={eur(mrr)} accent="green" icon={<Icon>{icons.repeat}</Icon>} />
         <StatCard label="Panier moyen" value={eur(panierMoyen)} accent="amber" icon={<Icon>{icons.cart}</Icon>} />
         <StatCard label="Dépenses · ce mois" value={eur(depensesMois)} accent="rose" icon={<Icon>{icons.out}</Icon>} />
+      </div>
+
+      <div>
+        <div className="text-xs font-semibold uppercase tracking-wider text-stone-400 mb-3">
+          Accès rapide
+        </div>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <QuickAction href="/finances" title="Ajouter une vente" subtitle="Journal des ventes" icon={<Icon>{icons.cart}</Icon>} />
+          <QuickAction href="/finances" title="Catalogue produits" subtitle="Produits & tarifs" icon={<Icon>{icons.cash}</Icon>} />
+          <QuickAction href="/clients" title="Nouveau client" subtitle="Fiches clients" icon={<Icon>{icons.repeat}</Icon>} />
+          <QuickAction href="/finances" title="Suivi des dépenses" subtitle="Budget" icon={<Icon>{icons.out}</Icon>} />
+        </div>
       </div>
 
       <div className="grid lg:grid-cols-3 gap-5">

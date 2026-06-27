@@ -6,12 +6,14 @@ export function StatCard({
   hint,
   accent = "indigo",
   icon,
+  trend,
 }: {
   label: string;
   value: string;
   hint?: string;
   accent?: "indigo" | "green" | "amber" | "rose";
   icon?: ReactNode;
+  trend?: { dir: "up" | "down"; text: string };
 }) {
   const accents: Record<string, string> = {
     indigo: "bg-indigo-50 text-indigo-700",
@@ -29,11 +31,49 @@ export function StatCard({
           </div>
         )}
       </div>
-      <div className="text-3xl font-semibold text-[#1e1b3a] mt-3 tracking-tight">
-        {value}
+      <div className="flex items-end gap-2 mt-3">
+        <div className="text-3xl font-semibold text-[#1e1b3a] tracking-tight">{value}</div>
+        {trend && (
+          <span
+            className={`mb-1 text-xs font-medium px-1.5 py-0.5 rounded-md ${
+              trend.dir === "up"
+                ? "bg-emerald-50 text-emerald-600"
+                : "bg-rose-50 text-rose-600"
+            }`}
+          >
+            {trend.dir === "up" ? "▲" : "▼"} {trend.text}
+          </span>
+        )}
       </div>
       {hint && <div className="text-xs text-stone-400 mt-1">{hint}</div>}
     </div>
+  );
+}
+
+export function QuickAction({
+  href,
+  title,
+  subtitle,
+  icon,
+}: {
+  href: string;
+  title: string;
+  subtitle: string;
+  icon: ReactNode;
+}) {
+  return (
+    <a
+      href={href}
+      className="group bg-white rounded-2xl border border-stone-200/70 p-4 shadow-sm hover:border-indigo-300 hover:shadow transition-all flex items-center gap-3"
+    >
+      <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-700 grid place-items-center shrink-0">
+        {icon}
+      </div>
+      <div className="min-w-0">
+        <div className="text-sm font-medium text-[#1e1b3a] truncate">{title}</div>
+        <div className="text-xs text-stone-400 truncate">{subtitle}</div>
+      </div>
+    </a>
   );
 }
 
