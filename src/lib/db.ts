@@ -131,6 +131,9 @@ export function listSales(): SaleRow[] {
 export function salesSince(iso: string): Sale[] {
   return load().sales.filter((s) => s.sold_at >= iso);
 }
+export function allSales(): Sale[] {
+  return load().sales;
+}
 export function recurringSalesSince(iso: string): Sale[] {
   const data = load();
   const recurringIds = new Set(

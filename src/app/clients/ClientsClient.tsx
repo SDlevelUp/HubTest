@@ -41,40 +41,43 @@ export default function ClientsClient() {
 
   return (
     <div className="space-y-6">
-      <h1 className="font-serif text-2xl text-indigo-900">Clients</h1>
+      <header>
+        <h1 className="font-serif text-3xl text-[#1e1b3a]">Clients</h1>
+        <p className="text-sm text-stone-500 mt-1">Tes fiches clients</p>
+      </header>
 
-      <div className="bg-white border border-stone-200 rounded-xl p-4 grid grid-cols-2 md:grid-cols-5 gap-3">
+      <div className="bg-white border border-stone-200/70 rounded-2xl p-5 shadow-sm grid grid-cols-2 md:grid-cols-5 gap-3">
         <input
-          className="border rounded px-2 py-1 text-sm"
+          className="border border-stone-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-300"
           placeholder="Nom"
           value={form.name}
           onChange={(e) => setForm({ ...form, name: e.target.value })}
         />
         <input
-          className="border rounded px-2 py-1 text-sm"
+          className="border border-stone-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-300"
           placeholder="Email"
           value={form.email}
           onChange={(e) => setForm({ ...form, email: e.target.value })}
         />
         <input
-          className="border rounded px-2 py-1 text-sm"
+          className="border border-stone-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-300"
           placeholder="Téléphone"
           value={form.phone}
           onChange={(e) => setForm({ ...form, phone: e.target.value })}
         />
         <input
-          className="border rounded px-2 py-1 text-sm"
+          className="border border-stone-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-300"
           placeholder="Notes"
           value={form.notes}
           onChange={(e) => setForm({ ...form, notes: e.target.value })}
         />
-        <button onClick={add} className="bg-indigo-900 text-white rounded px-3 py-1 text-sm">
+        <button onClick={add} className="bg-[#1e1b3a] text-white rounded-lg px-4 py-2 text-sm font-medium hover:bg-indigo-900 transition-colors">
           Ajouter
         </button>
       </div>
 
       <div className="grid md:grid-cols-2 gap-4">
-        <div className="bg-white border border-stone-200 rounded-xl divide-y divide-stone-100">
+        <div className="bg-white border border-stone-200/70 rounded-2xl divide-y divide-stone-100 shadow-sm overflow-hidden">
           {clients.map((c) => (
             <button
               key={c.id}
@@ -92,10 +95,10 @@ export default function ClientsClient() {
           )}
         </div>
 
-        <div className="bg-white border border-stone-200 rounded-xl p-4">
+        <div className="bg-white border border-stone-200/70 rounded-2xl p-5 shadow-sm">
           {selected ? (
             <div className="space-y-2 text-sm">
-              <div className="font-serif text-lg text-indigo-900">{selected.name}</div>
+              <div className="font-serif text-xl text-[#1e1b3a]">{selected.name}</div>
               <div>Email : {selected.email ?? "—"}</div>
               <div>Téléphone : {selected.phone ?? "—"}</div>
               <div>Notes : {selected.notes ?? "—"}</div>
@@ -104,7 +107,7 @@ export default function ClientsClient() {
               </div>
               <button
                 onClick={() => remove(selected.id)}
-                className="text-red-600 text-xs mt-2"
+                className="text-rose-600 text-xs mt-2"
               >
                 Supprimer la fiche
               </button>

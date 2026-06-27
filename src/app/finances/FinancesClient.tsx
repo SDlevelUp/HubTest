@@ -46,16 +46,19 @@ export default function FinancesClient() {
 
   return (
     <div className="space-y-6">
-      <h1 className="font-serif text-2xl text-indigo-900">Pilotage & finances</h1>
-      <div className="flex gap-2 border-b border-stone-200">
+      <header>
+        <h1 className="font-serif text-3xl text-[#1e1b3a]">Pilotage &amp; finances</h1>
+        <p className="text-sm text-stone-500 mt-1">Ventes, produits, dépenses et objectifs</p>
+      </header>
+      <div className="inline-flex gap-1 bg-white border border-stone-200/70 rounded-xl p-1 shadow-sm">
         {TABS.map((t) => (
           <button
             key={t}
             onClick={() => setTab(t)}
-            className={`px-3 py-2 text-sm ${
+            className={`px-4 py-2 text-sm rounded-lg transition-colors ${
               tab === t
-                ? "border-b-2 border-indigo-900 text-indigo-900 font-medium"
-                : "text-stone-500"
+                ? "bg-[#1e1b3a] text-white font-medium"
+                : "text-stone-500 hover:text-[#1e1b3a]"
             }`}
           >
             {t}
@@ -137,9 +140,9 @@ function VentesTab({
 
   return (
     <div className="space-y-4">
-      <div className="bg-white border border-stone-200 rounded-xl p-4 grid grid-cols-2 md:grid-cols-4 gap-3">
+      <div className="bg-white border border-stone-200/70 rounded-2xl p-5 shadow-sm grid grid-cols-2 md:grid-cols-4 gap-3">
         <select
-          className="border rounded px-2 py-1 text-sm"
+          className="border border-stone-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-300"
           value={form.client_id}
           onChange={(e) => setForm({ ...form, client_id: e.target.value })}
         >
@@ -151,7 +154,7 @@ function VentesTab({
           ))}
         </select>
         <select
-          className="border rounded px-2 py-1 text-sm"
+          className="border border-stone-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-300"
           value={form.product_id}
           onChange={(e) => setForm({ ...form, product_id: e.target.value })}
         >
@@ -163,21 +166,21 @@ function VentesTab({
           ))}
         </select>
         <input
-          className="border rounded px-2 py-1 text-sm"
+          className="border border-stone-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-300"
           placeholder="Montant brut €"
           type="number"
           value={form.amount_gross}
           onChange={(e) => setForm({ ...form, amount_gross: e.target.value })}
         />
         <input
-          className="border rounded px-2 py-1 text-sm"
+          className="border border-stone-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-300"
           placeholder="Montant net €"
           type="number"
           value={form.amount_net}
           onChange={(e) => setForm({ ...form, amount_net: e.target.value })}
         />
         <select
-          className="border rounded px-2 py-1 text-sm"
+          className="border border-stone-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-300"
           value={form.payment_plan}
           onChange={(e) => setForm({ ...form, payment_plan: e.target.value })}
         >
@@ -187,7 +190,7 @@ function VentesTab({
         </select>
         {form.payment_plan !== "comptant" && (
           <input
-            className="border rounded px-2 py-1 text-sm"
+            className="border border-stone-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-300"
             placeholder="Nb échéances"
             type="number"
             value={form.installments_total}
@@ -195,20 +198,20 @@ function VentesTab({
           />
         )}
         <input
-          className="border rounded px-2 py-1 text-sm"
+          className="border border-stone-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-300"
           type="date"
           value={form.sold_at}
           onChange={(e) => setForm({ ...form, sold_at: e.target.value })}
         />
         <button
           onClick={add}
-          className="bg-indigo-900 text-white rounded px-3 py-1 text-sm"
+          className="bg-[#1e1b3a] text-white rounded-lg px-4 py-2 text-sm font-medium hover:bg-indigo-900 transition-colors"
         >
           Ajouter la vente
         </button>
       </div>
 
-      <div className="bg-white border border-stone-200 rounded-xl divide-y divide-stone-100">
+      <div className="bg-white border border-stone-200/70 rounded-2xl divide-y divide-stone-100 shadow-sm overflow-hidden">
         {sales.map((s) => (
           <div key={s.id} className="p-3 flex items-center justify-between text-sm">
             <div>
@@ -231,7 +234,7 @@ function VentesTab({
                   Échéance payée
                 </button>
               )}
-              <button onClick={() => remove(s.id)} className="text-red-600 text-xs">
+              <button onClick={() => remove(s.id)} className="text-rose-600 text-xs">
                 Supprimer
               </button>
             </div>
@@ -275,15 +278,15 @@ function ProduitsTab({
 
   return (
     <div className="space-y-4">
-      <div className="bg-white border border-stone-200 rounded-xl p-4 grid grid-cols-2 md:grid-cols-4 gap-3 items-center">
+      <div className="bg-white border border-stone-200/70 rounded-2xl p-5 shadow-sm grid grid-cols-2 md:grid-cols-4 gap-3 items-center">
         <input
-          className="border rounded px-2 py-1 text-sm"
+          className="border border-stone-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-300"
           placeholder="Nom du produit"
           value={form.name}
           onChange={(e) => setForm({ ...form, name: e.target.value })}
         />
         <input
-          className="border rounded px-2 py-1 text-sm"
+          className="border border-stone-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-300"
           placeholder="Prix €"
           type="number"
           value={form.price}
@@ -299,18 +302,18 @@ function ProduitsTab({
         </label>
         <button
           onClick={add}
-          className="bg-indigo-900 text-white rounded px-3 py-1 text-sm"
+          className="bg-[#1e1b3a] text-white rounded-lg px-4 py-2 text-sm font-medium hover:bg-indigo-900 transition-colors"
         >
           Ajouter
         </button>
       </div>
-      <div className="bg-white border border-stone-200 rounded-xl divide-y divide-stone-100">
+      <div className="bg-white border border-stone-200/70 rounded-2xl divide-y divide-stone-100 shadow-sm overflow-hidden">
         {products.map((p) => (
           <div key={p.id} className="p-3 flex items-center justify-between text-sm">
             <div>
               {p.name} — {p.price.toFixed(0)} € {p.recurring ? "(récurrent)" : ""}
             </div>
-            <button onClick={() => remove(p.id)} className="text-red-600 text-xs">
+            <button onClick={() => remove(p.id)} className="text-rose-600 text-xs">
               Supprimer
             </button>
           </div>
@@ -361,48 +364,48 @@ function DepensesTab({
 
   return (
     <div className="space-y-4">
-      <div className="bg-white border border-stone-200 rounded-xl p-4 grid grid-cols-2 md:grid-cols-4 gap-3">
+      <div className="bg-white border border-stone-200/70 rounded-2xl p-5 shadow-sm grid grid-cols-2 md:grid-cols-4 gap-3">
         <input
-          className="border rounded px-2 py-1 text-sm"
+          className="border border-stone-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-300"
           placeholder="Libellé"
           value={form.label}
           onChange={(e) => setForm({ ...form, label: e.target.value })}
         />
         <input
-          className="border rounded px-2 py-1 text-sm"
+          className="border border-stone-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-300"
           placeholder="Montant €"
           type="number"
           value={form.amount}
           onChange={(e) => setForm({ ...form, amount: e.target.value })}
         />
         <input
-          className="border rounded px-2 py-1 text-sm"
+          className="border border-stone-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-300"
           placeholder="Catégorie"
           value={form.category}
           onChange={(e) => setForm({ ...form, category: e.target.value })}
         />
         <input
-          className="border rounded px-2 py-1 text-sm"
+          className="border border-stone-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-300"
           type="date"
           value={form.spent_at}
           onChange={(e) => setForm({ ...form, spent_at: e.target.value })}
         />
         <button
           onClick={add}
-          className="bg-indigo-900 text-white rounded px-3 py-1 text-sm col-span-2 md:col-span-1"
+          className="bg-[#1e1b3a] text-white rounded-lg px-4 py-2 text-sm font-medium hover:bg-indigo-900 transition-colors col-span-2 md:col-span-1"
         >
           Ajouter
         </button>
       </div>
       <div className="text-sm text-stone-500">Total : {total.toFixed(0)} €</div>
-      <div className="bg-white border border-stone-200 rounded-xl divide-y divide-stone-100">
+      <div className="bg-white border border-stone-200/70 rounded-2xl divide-y divide-stone-100 shadow-sm overflow-hidden">
         {expenses.map((e) => (
           <div key={e.id} className="p-3 flex items-center justify-between text-sm">
             <div>
               {e.label} — {e.amount.toFixed(0)} € {e.category ? `(${e.category})` : ""} ·{" "}
               {new Date(e.spent_at).toLocaleDateString("fr-FR")}
             </div>
-            <button onClick={() => remove(e.id)} className="text-red-600 text-xs">
+            <button onClick={() => remove(e.id)} className="text-rose-600 text-xs">
               Supprimer
             </button>
           </div>
@@ -430,16 +433,16 @@ function ObjectifTab({ goals, refresh }: { goals: Goal[]; refresh: () => void })
   }
 
   return (
-    <div className="bg-white border border-stone-200 rounded-xl p-4 space-y-3 max-w-sm">
+    <div className="bg-white border border-stone-200/70 rounded-2xl p-5 shadow-sm space-y-3 max-w-sm">
       <div className="text-sm text-stone-500">Objectif de CA brut pour {year}</div>
       <input
-        className="border rounded px-2 py-1 text-sm w-full"
+        className="border border-stone-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-300 w-full"
         type="number"
         placeholder="Montant €"
         value={amount}
         onChange={(e) => setAmount(e.target.value)}
       />
-      <button onClick={save} className="bg-indigo-900 text-white rounded px-3 py-1 text-sm">
+      <button onClick={save} className="bg-[#1e1b3a] text-white rounded-lg px-4 py-2 text-sm font-medium hover:bg-indigo-900 transition-colors">
         Enregistrer
       </button>
     </div>
